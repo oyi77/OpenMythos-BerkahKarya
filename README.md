@@ -1,7 +1,7 @@
 # OpenMythos
+
 A theoretical reconstruction of the Claude Mythos architecture, built from first principles using the available research literature.
 
----
 
 ## The Central Hypothesis
 
@@ -145,6 +145,14 @@ Mythos almost certainly has some version of this. The model cannot naively run t
 
 ---
 
+## Mixture of Experts — Suspected for Large Parameter Counts
+
+The looped transformer explains the depth of Mythos's reasoning, but not the breadth. Handling wildly different domains — code, math, literature, science, law — with the same weights requires **Mixture of Experts (MoE)**. The suspected design replaces every FFN in the Recurrent Block with a fine-grained MoE layer: each FFN is split into many small experts (1/m the normal size), a router selects the top-mK of them per token via learned affinity scores, and a small number of **shared experts** are always activated regardless of routing to absorb common cross-domain knowledge — syntax, basic reasoning, general context — that would otherwise be redundantly learned by every routed expert. Routing collapse is prevented through a bias term on the router logits adjusted dynamically during training, keeping load balanced across experts without distorting the loss signal. 
+
+As the hidden state `h_t` evolves across loop iterations, the router may select different expert subsets at each depth, making every loop computationally distinct despite shared weights. MoE provides breadth; looping provides depth. If the activation ratio is ~5%, Mythos could hold hundreds of billions of total parameters while activating only a small fraction per token — the true parameter count, if ever disclosed, would be a storage number, not a compute number.
+
+---
+
 ## The Memorization-Reasoning Tradeoff
 
 Looped models exhibit an interesting dichotomy: looping improves reasoning but can hurt memorization. The recurrent structure is optimized for iterative composition — running a reasoning chain forward — but does not inherently improve the storage of rote facts.
@@ -181,12 +189,13 @@ Theoretical analysis suggests 2-3x improvements in inference throughput. For a d
 | Property | Description |
 |---|---|
 | Architecture | Recurrent-Depth Transformer (Prelude + Looped Recurrent Block + Coda) |
+| FFN layer | Suspected MoE — fine-grained experts + always-on shared experts |
+| Parameter count | Very large total; small fraction activated per token (~5% estimate) |
 | Reasoning mechanism | Implicit multi-hop via iterative latent updates — no token output between steps |
 | Inference-time scaling | More loops = deeper reasoning, following predictable exponential decay |
 | Training stability | LTI-constrained injection parameters with spectral radius < 1 |
 | Loop differentiation | Likely uses loop-index positional embedding (à la RoPE) per iteration |
 | Halting | Adaptive Computation Time or learned convergence criterion |
-| Parameter efficiency | Achieves quality of a ~2x larger fixed-depth transformer |
 | Scaling law | Optimal training scales looping and data together, not parameters alone |
 | Reasoning vs. memory | Structurally biased toward composition; memorization requires separate treatment |
 | Deployment | Continuous Depth-wise Batching enables variable compute per request |
@@ -205,6 +214,7 @@ Theoretical analysis suggests 2-3x improvements in inference throughput. For a d
 
 ### Papers
 
+- Fine-grained expert segmentation and shared expert isolation in MoE: https://arxiv.org/abs/2401.06066
 - Loop, Think, & Generalize — Implicit Reasoning in Recurrent Depth Transformers: https://arxiv.org/pdf/2604.07822
 - Parcae — Scaling Laws for Stable Looped Language Models: https://arxiv.org/abs/2604.12946
 - Parcae blog: https://sandyresearch.github.io/parcae/

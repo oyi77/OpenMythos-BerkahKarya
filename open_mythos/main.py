@@ -1012,4 +1012,3 @@ class OpenMythos(nn.Module):
             next_tok = torch.multinomial(probs, num_samples=1)
             input_ids = torch.cat([input_ids, next_tok], dim=1)
         return input_ids
-

@@ -564,7 +564,7 @@ class LoRAAdapter(nn.Module):
         """
         super().__init__()
         self.down = nn.Linear(dim, rank, bias=False)  # shared A: dim → rank
-        self.B = nn.Parameter(torch.zeros(rank, dim))  # shared B: rank → dim
+        self.B = nn.Parameter(torch.randn(rank, dim) * 0.02)  # shared B: rank → dim
         self.scale = nn.Embedding(max_loops, rank)  # per-loop element-wise scale
 
     def forward(self, x: torch.Tensor, loop_t: int) -> torch.Tensor:
@@ -678,9 +678,10 @@ class LTIInjection(nn.Module):
             1-D tensor of shape (dim,) with all values strictly in (0, 1),
             guaranteeing ρ(A) < 1 regardless of learned parameter values.
         """
-        A_c = -torch.exp(self.log_A)  # continuous diagonal, always < 0
-        dt = torch.exp(self.log_dt)  # always > 0
-        return torch.exp(dt * A_c)  # ZOH: values in (0, 1)
+        # Compute in log space to avoid 0 * inf = NaN when log_dt → -∞, log_A → +∞.
+        # dt * A_c = -exp(log_dt) * exp(log_A) = -exp(log_dt + log_A)
+        # Clamp keeps the product finite in float32 for any gradient step size.
+        return torch.exp(-torch.exp((self.log_dt + self.log_A).clamp(-20, 20)))
 
     def forward(
         self, h: torch.Tensor, e: torch.Tensor, transformer_out: torch.Tensor

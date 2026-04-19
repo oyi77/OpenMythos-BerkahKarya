@@ -153,11 +153,15 @@ class TestRoPEExtended:
         assert torch.allclose(freqs.imag, expected.imag, atol=1e-6)
 
     def test_higher_theta_produces_smaller_angles(self):
-        """Larger theta → slower frequency decay → smaller rotation angle per step."""
+        """Larger theta → slower frequency decay → smaller rotation angle per step.
+
+        Index 0 (dim_i=0) is excluded: its frequency is 1/(theta^0)=1 for any theta,
+        so the comparison is not meaningful there.
+        """
         dim, max_len = 16, 8
         freqs_fast = precompute_rope_freqs(dim=dim, max_len=max_len, theta=100.0)
         freqs_slow = precompute_rope_freqs(dim=dim, max_len=max_len, theta=500000.0)
-        assert (freqs_fast[1].angle().abs() > freqs_slow[1].angle().abs()).all()
+        assert (freqs_fast[1, 1:].angle().abs() > freqs_slow[1, 1:].angle().abs()).all()
 
     def test_default_theta_matches_explicit(self):
         """Omitting theta must equal passing theta=500000.0."""

@@ -15,6 +15,15 @@ from open_mythos.main import (
     apply_rope,
     loop_index_embedding,
 )
+from open_mythos.variants import (
+    mythos_1b,
+    mythos_3b,
+    mythos_10b,
+    mythos_50b,
+    mythos_100b,
+    mythos_500b,
+    mythos_1t,
+)
 
 __all__ = [
     "MythosConfig",
@@ -32,4 +41,11 @@ __all__ = [
     "precompute_rope_freqs",
     "apply_rope",
     "loop_index_embedding",
+    "mythos_1b",
+    "mythos_3b",
+    "mythos_10b",
+    "mythos_50b",
+    "mythos_100b",
+    "mythos_500b",
+    "mythos_1t",
 ]

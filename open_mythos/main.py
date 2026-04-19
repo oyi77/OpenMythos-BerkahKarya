@@ -78,6 +78,8 @@ class MythosConfig:
     rope_theta: float = 500000.0
     # LoRA depth adaptation
     lora_rank: int = 16
+    # Maximum tokens to generate per forward pass
+    max_output_tokens: int = 4096
 
 
 # ---------------------------------------------------------------------------

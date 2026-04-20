@@ -191,6 +191,3 @@ def mythos_1t() -> MythosConfig:
         lora_rank=256,
         max_output_tokens=131072,
     )
-
-
-# fmt: on

@@ -289,6 +289,9 @@ Theoretical analysis suggests 2-3x improvements in inference throughput. For a d
 - Looped transformer cyclic trajectories and input injection (rosinality): https://x.com/rosinality/status/2043953033428541853
 - Parcae scaling laws for stable looped language models — thread (Hayden Prairie): https://x.com/hayden_prairie/status/2044453231913537927
 - RoPE-like loop index embedding idea to differentiate functions across iterations (davidad): https://x.com/davidad/status/2044453231913537927
+- On the Looped Transformers Controversy by ChrisHayduk: https://x.com/ChrisHayduk/status/2045947623572688943
+- On the Looped Transformers Controversy Summary by @realsigridjin https://x.com/realsigridjin/status/2046012743778766875
+
 
 ### Papers
 

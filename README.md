@@ -7,22 +7,10 @@
       <img alt="Version" src="https://img.shields.io/pypi/v/open-mythos?style=for-the-badge&color=3670A0">
     </picture>
   </a>
-  <a href="https://pypi.org/project/open-mythos/" target="_blank">
-    <picture>
-      <source srcset="https://img.shields.io/pypi/dm/open-mythos?style=for-the-badge&color=3670A0" media="(prefers-color-scheme: dark)">
-      <img alt="Downloads" src="https://img.shields.io/pypi/dm/open-mythos?style=for-the-badge&color=3670A0">
-    </picture>
-  </a>
   <a href="https://twitter.com/kyegomezb/">
     <picture>
       <source srcset="https://img.shields.io/badge/Twitter-Follow-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white" media="(prefers-color-scheme: dark)">
       <img src="https://img.shields.io/badge/Twitter-Follow-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white" alt="Twitter">
-    </picture>
-  </a>
-  <a href="https://github.com/kyegomez/OpenMythos" target="_blank">
-    <picture>
-      <source srcset="https://img.shields.io/github/stars/kyegomez/OpenMythos?style=for-the-badge&logo=github&logoColor=white" media="(prefers-color-scheme: dark)">
-      <img alt="GitHub Stars" src="https://img.shields.io/github/stars/kyegomez/OpenMythos?style=for-the-badge&logo=github&logoColor=white">
     </picture>
   </a>
   <a href="https://discord.gg/3keGBK9Pvr" target="_blank">

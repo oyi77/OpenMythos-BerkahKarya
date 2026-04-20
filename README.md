@@ -338,6 +338,7 @@ Theoretical analysis suggests 2-3x improvements in inference throughput. For a d
 - Reasoning with Latent Thoughts — On the Power of Looped Transformers: https://arxiv.org/abs/2502.17416
 - Training Large Language Models to Reason in a Continuous Latent Space: https://arxiv.org/abs/2412.06769
 - Relaxed Recursive Transformers — Effective Parameter Sharing with Layer-wise LoRA: https://arxiv.org/pdf/2410.20672
+- Mixture-of-Depths Attention: https://arxiv.org/abs/2603.15619
 
 ---
 

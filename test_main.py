@@ -1,10 +1,3 @@
-"""
-pytest suite for OpenMythos (second.py).
-Tests every major class and feature: shapes, correctness invariants, and
-architecture-specific properties (LTI stability, ACT halting, depth extrapolation,
-KV cache consistency, GQA vs MLA swap).
-"""
-
 import torch
 import pytest
 from open_mythos.main import (

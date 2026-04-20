@@ -1,5 +1,32 @@
 # OpenMythos
 
+<p align="center">
+  <a href="https://pypi.org/project/open-mythos/" target="_blank">
+    <picture>
+      <source srcset="https://img.shields.io/pypi/v/open-mythos?style=for-the-badge&color=3670A0" media="(prefers-color-scheme: dark)">
+      <img alt="Version" src="https://img.shields.io/pypi/v/open-mythos?style=for-the-badge&color=3670A0">
+    </picture>
+  </a>
+  <a href="https://pypi.org/project/open-mythos/" target="_blank">
+    <picture>
+      <source srcset="https://img.shields.io/pypi/dm/open-mythos?style=for-the-badge&color=3670A0" media="(prefers-color-scheme: dark)">
+      <img alt="Downloads" src="https://img.shields.io/pypi/dm/open-mythos?style=for-the-badge&color=3670A0">
+    </picture>
+  </a>
+  <a href="https://twitter.com/kyegomezb/">
+    <picture>
+      <source srcset="https://img.shields.io/badge/Twitter-Follow-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white" media="(prefers-color-scheme: dark)">
+      <img src="https://img.shields.io/badge/Twitter-Follow-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white" alt="Twitter">
+    </picture>
+  </a>
+  <a href="https://github.com/kyegomez/OpenMythos" target="_blank">
+    <picture>
+      <source srcset="https://img.shields.io/badge/GitHub-Repo-171515?style=for-the-badge&logo=github&logoColor=white" media="(prefers-color-scheme: dark)">
+      <img src="https://img.shields.io/badge/GitHub-Repo-171515?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+    </picture>
+  </a>
+</p>
+
 > **Disclaimer:** OpenMythos is an independent, community-driven theoretical reconstruction based solely on publicly available research and speculation. It is not affiliated with, endorsed by, or connected to Anthropic or any of their proprietary systems.
 
 OpenMythos is an open-source, theoretical implementation of the Claude Mythos model. It implements a Recurrent-Depth Transformer (RDT) with three stages: **Prelude** (transformer blocks), a looped **Recurrent Block** (up to `max_loop_iters`), and a final **Coda**. Attention is switchable between MLA and GQA, and the feed-forward uses a sparse MoE with routed and shared experts ideal for exploring compute-adaptive, depth-variable reasoning.

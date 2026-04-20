@@ -1,9 +1,3 @@
-"""
-OpenMythos v1 — Recurrent-Depth Transformer
-Architecture: Prelude → [Looped Recurrent Block]×T → Coda
-MoE FFN (DeepSeek-style), GQA or MLA, RoPE, RMSNorm, KV cache, LTI-stable injection, ACT halting
-"""
-
 from dataclasses import dataclass
 from typing import Optional
 
@@ -633,7 +627,9 @@ class TransformerBlock(nn.Module):
         Returns:
             Output tensor of shape (B, T, dim)
         """
-        x = x + self.resid_drop(self.attn(self.attn_norm(x), freqs_cis, mask, kv_cache, cache_key))
+        x = x + self.resid_drop(
+            self.attn(self.attn_norm(x), freqs_cis, mask, kv_cache, cache_key)
+        )
         x = x + self.resid_drop(self.ffn(self.ffn_norm(x)))
         return x
 

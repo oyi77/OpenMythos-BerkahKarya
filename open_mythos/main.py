@@ -76,6 +76,8 @@ class MythosConfig:
     lora_rank: int = 16
     # Maximum tokens to generate per forward pass
     max_output_tokens: int = 4096
+    # Dropout (set 0.0 to disable; 0.1 is standard for pretraining)
+    dropout: float = 0.0
 
 
 # ---------------------------------------------------------------------------
@@ -194,6 +196,7 @@ class GQAttention(nn.Module):
         self.wk = nn.Linear(cfg.dim, cfg.n_kv_heads * self.head_dim, bias=False)
         self.wv = nn.Linear(cfg.dim, cfg.n_kv_heads * self.head_dim, bias=False)
         self.wo = nn.Linear(cfg.n_heads * self.head_dim, cfg.dim, bias=False)
+        self.attn_drop = nn.Dropout(cfg.dropout)
 
     def forward(
         self,
@@ -240,7 +243,7 @@ class GQAttention(nn.Module):
         attn = torch.matmul(q, k.transpose(-2, -1)) * scale
         if mask is not None:
             attn = attn + mask
-        attn = F.softmax(attn, dim=-1)
+        attn = self.attn_drop(F.softmax(attn, dim=-1))
         out = torch.matmul(attn, v)
         out = out.transpose(1, 2).contiguous().view(B, T, -1)
         return self.wo(out)
@@ -315,6 +318,7 @@ class MLAttention(nn.Module):
         )
 
         self.wo = nn.Linear(cfg.n_heads * cfg.v_head_dim, cfg.dim, bias=False)
+        self.attn_drop = nn.Dropout(cfg.dropout)
 
     def forward(
         self,
@@ -381,7 +385,7 @@ class MLAttention(nn.Module):
         attn = torch.matmul(q, k.transpose(-2, -1)) * scale
         if mask is not None:
             attn = attn + mask
-        attn = F.softmax(attn, dim=-1)
+        attn = self.attn_drop(F.softmax(attn, dim=-1))
         out = torch.matmul(attn, v)  # (B, H, T, v_dim)
         out = out.transpose(1, 2).contiguous().view(B, T, -1)
         return self.wo(out)
@@ -608,6 +612,7 @@ class TransformerBlock(nn.Module):
         self.ffn_norm = RMSNorm(cfg.dim)
         self.attn = MLAttention(cfg) if cfg.attn_type == "mla" else GQAttention(cfg)
         self.ffn = MoEFFN(cfg) if use_moe else Expert(cfg.dim, cfg.dim * 4 // 3)
+        self.resid_drop = nn.Dropout(cfg.dropout)
 
     def forward(
         self,
@@ -628,8 +633,8 @@ class TransformerBlock(nn.Module):
         Returns:
             Output tensor of shape (B, T, dim)
         """
-        x = x + self.attn(self.attn_norm(x), freqs_cis, mask, kv_cache, cache_key)
-        x = x + self.ffn(self.ffn_norm(x))
+        x = x + self.resid_drop(self.attn(self.attn_norm(x), freqs_cis, mask, kv_cache, cache_key))
+        x = x + self.resid_drop(self.ffn(self.ffn_norm(x)))
         return x
 
 

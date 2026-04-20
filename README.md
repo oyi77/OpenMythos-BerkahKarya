@@ -1,6 +1,6 @@
 # OpenMythos
 
-<p align="center">
+<p align="left">
   <a href="https://pypi.org/project/open-mythos/" target="_blank">
     <picture>
       <source srcset="https://img.shields.io/pypi/v/open-mythos?style=for-the-badge&color=3670A0" media="(prefers-color-scheme: dark)">

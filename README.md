@@ -21,8 +21,20 @@
   </a>
   <a href="https://github.com/kyegomez/OpenMythos" target="_blank">
     <picture>
-      <source srcset="https://img.shields.io/badge/GitHub-Repo-171515?style=for-the-badge&logo=github&logoColor=white" media="(prefers-color-scheme: dark)">
-      <img src="https://img.shields.io/badge/GitHub-Repo-171515?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+      <source srcset="https://img.shields.io/github/stars/kyegomez/OpenMythos?style=for-the-badge&logo=github&logoColor=white" media="(prefers-color-scheme: dark)">
+      <img alt="GitHub Stars" src="https://img.shields.io/github/stars/kyegomez/OpenMythos?style=for-the-badge&logo=github&logoColor=white">
+    </picture>
+  </a>
+  <a href="https://discord.gg/3keGBK9Pvr" target="_blank">
+    <picture>
+      <source srcset="https://img.shields.io/badge/Discord-Join-5865F2?style=for-the-badge&logo=discord&logoColor=white" media="(prefers-color-scheme: dark)">
+      <img alt="Discord" src="https://img.shields.io/badge/Discord-Join-5865F2?style=for-the-badge&logo=discord&logoColor=white">
+    </picture>
+  </a>
+  <a href="https://pytorch.org" target="_blank">
+    <picture>
+      <source srcset="https://img.shields.io/badge/PyTorch-Implemented-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white" media="(prefers-color-scheme: dark)">
+      <img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-Implemented-EE4C2C?style=for-the-badge&logo=pytorch&logoColor=white">
     </picture>
   </a>
 </p>

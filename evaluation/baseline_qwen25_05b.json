@@ -1,0 +1,31 @@
+{
+  "model": "qwen2.5:0.5b",
+  "avg_score": 43.33333333333333,
+  "results": {
+    "trading": {
+      "domain": "Trading",
+      "score": 16.666666666666664,
+      "latency": 9.478088140487671
+    },
+    "crypto": {
+      "domain": "Crypto",
+      "score": 50.0,
+      "latency": 7.399068355560303
+    },
+    "stocks": {
+      "domain": "IDX Stocks",
+      "score": 33.33333333333333,
+      "latency": 8.220244646072388
+    },
+    "bonds": {
+      "domain": "Bonds",
+      "score": 50.0,
+      "latency": 7.796220541000366
+    },
+    "commodity": {
+      "domain": "Commodity",
+      "score": 66.66666666666666,
+      "latency": 8.35805630683899
+    }
+  }
+}

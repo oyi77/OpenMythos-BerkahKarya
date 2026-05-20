@@ -94,10 +94,14 @@ class ExpertOffloader:
 
     def _get_expert_module(self, layer_name: str, expert_id: int) -> nn.Module:
         """Get the expert module by layer name and expert ID."""
+        if layer_name not in self.moe_layers:
+            raise KeyError(f"MoE layer '{layer_name}' not found. Available: {list(self.moe_layers.keys())}")
         layer = self.moe_layers[layer_name]
-        if hasattr(layer.experts, "__getitem__"):
-            return layer.experts[expert_id]
-        raise ValueError(f"Cannot access expert {expert_id} in layer {layer_name}")
+        if not hasattr(layer, "experts"):
+            raise AttributeError(f"Layer '{layer_name}' has no 'experts' attribute")
+        if expert_id < 0 or expert_id >= len(layer.experts):
+            raise IndexError(f"Expert {expert_id} out of range [0, {len(layer.experts)-1}] for layer '{layer_name}'")
+        return layer.experts[expert_id]
 
     def _move_expert_to_device(
         self, layer_name: str, expert_id: int, device: str
@@ -106,13 +110,24 @@ class ExpertOffloader:
         expert = self._get_expert_module(layer_name, expert_id)
         return expert.to(device)
 
+    def __repr__(self) -> str:
+        """String representation of the offloader."""
+        total_experts = sum(len(m.experts) for m in self.moe_layers.values())
+        return (
+            f"ExpertOffloader("
+            f"moe_layers={len(self.moe_layers)}, "
+            f"total_experts={total_experts}, "
+            f"gpu_experts={self.gpu_experts}, "
+            f"cache_experts={self.cache_experts})"
+        )
+
     def _save_expert_to_disk(self, layer_name: str, expert_id: int):
         """Save expert weights to NVMe storage."""
         expert = self._get_expert_module(layer_name, expert_id)
         safe_name = layer_name.replace(".", "_")
         path = self.storage_dir / f"{safe_name}_expert_{expert_id}.pt"
         torch.save(
-            {k: v.cpu() for k, v in expert.state_dict.items()},
+            {k: v.cpu() for k, v in expert.state_dict().items()},
             path,
         )
 

@@ -18,7 +18,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from typing import Optional, Tuple
-import math
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class QuantizedLinear(nn.Module):
@@ -41,8 +43,12 @@ class QuantizedLinear(nn.Module):
         group_size: int = 128,
     ):
         super().__init__()
-        assert bits in (4, 8), f"Only INT4 and INT8 supported, got {bits}"
-        assert group_size > 0, f"group_size must be positive, got {group_size}"
+        if bits not in (4, 8):
+            raise ValueError(f"Only INT4 and INT8 supported, got {bits}")
+        if group_size <= 0:
+            raise ValueError(f"group_size must be positive, got {group_size}")
+        if not isinstance(original_linear, nn.Linear):
+            raise TypeError(f"Expected nn.Linear, got {type(original_linear).__name__}")
 
         self.bits = bits
         self.group_size = group_size
@@ -145,9 +151,8 @@ class QuantizedLinear(nn.Module):
         unpacked = torch.stack([low, high], dim=-1).reshape(out_features, half_in * 2)
         return unpacked
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """Forward pass with dequantization on-the-fly."""
-        # Dequantize weights
+    def _dequantize_weight(self) -> torch.Tensor:
+        """Dequantize weights from INT4/INT8 to float."""
         if self.bits == 4:
             qweight_fp = self._unpack_int4(self.qweight)
         else:
@@ -163,15 +168,35 @@ class QuantizedLinear(nn.Module):
         weight = dequant.reshape(out_features, in_features)
 
         # Trim to original size
-        weight = weight[:, : self.in_features]
+        return weight[:, : self.in_features]
 
-        # Linear operation
-        output = F.linear(x.half(), weight.half())
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """Forward pass with on-the-fly dequantization.
+
+        Args:
+            x: Input tensor of shape (..., in_features)
+
+        Returns:
+            Output tensor of shape (..., out_features)
+        """
+        weight = self._dequantize_weight().half()
+        output = F.linear(x.half(), weight)
 
         if self.has_bias:
             output = output + self.bias
 
         return output
+
+    def __repr__(self) -> str:
+        """String representation."""
+        return (
+            f"QuantizedLinear("
+            f"in={self.in_features}, "
+            f"out={self.out_features}, "
+            f"bits={self.bits}, "
+            f"group_size={self.group_size}, "
+            f"bias={self.has_bias})"
+        )
 
 
 def quantize_linear_layer(
@@ -200,7 +225,14 @@ def quantize_moe_experts(
         bits: Quantization precision (4 or 8)
         group_size: Group size for quantization
         expert_ids: Specific experts to quantize (None = all)
+
+    Returns:
+        The modified MoE layer (modifies in-place)
     """
+    if bits not in (4, 8):
+        raise ValueError(f"Only INT4 and INT8 supported, got {bits}")
+    if group_size <= 0:
+        raise ValueError(f"group_size must be positive, got {group_size}")
     quantized_count = 0
 
     for name, module in moe_layer.named_modules():
@@ -255,21 +287,33 @@ def quantize_model(
     Attention layers, embeddings, and router remain in FP16.
 
     Args:
-        model: OpenMythos model
+        model: OpenMythos model to quantize
         bits: Quantization precision (4 or 8)
         group_size: Group size for quantization
-        quantize_experts_only: If True, only quantize MoE experts
+        quantize_experts_only: If True, only quantize MoE experts (recommended)
 
     Returns:
         Quantized model (modifies in-place)
+
+    Raises:
+        ValueError: If bits or group_size are invalid
     """
+    if bits not in (4, 8):
+        raise ValueError(f"Only INT4 and INT8 supported, got {bits}")
+    if group_size <= 0:
+        raise ValueError(f"group_size must be positive, got {group_size}")
+
     if quantize_experts_only:
         # Find MoE layers
+        moe_found = 0
         for name, module in model.named_modules():
             if hasattr(module, "experts") and hasattr(module, "router"):
                 quantize_moe_experts(module, bits, group_size)
+                moe_found += 1
+        logger.info(f"Quantized {moe_found} MoE layers to INT{bits} (group_size={group_size})")
     else:
         # Quantize all linear layers
+        quantized = 0
         for name, module in model.named_modules():
             if isinstance(module, nn.Linear):
                 parts = name.rsplit(".", 1)
@@ -282,6 +326,8 @@ def quantize_model(
                 setattr(
                     parent, attr_name, quantize_linear_layer(module, bits, group_size)
                 )
+                quantized += 1
+        logger.info(f"Quantized {quantized} linear layers to INT{bits}")
 
     return model
 

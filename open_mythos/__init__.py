@@ -16,6 +16,16 @@ from open_mythos.main import (
     precompute_rope_freqs,
 )
 from open_mythos.tokenizer import MythosTokenizer
+from open_mythos.ring_attention import (
+    RingAttention,
+    SparseRingAttention,
+    ring_attention_forward,
+)
+from open_mythos.kv_cache import (
+    QuantizedKVCache,
+    RingAttentionWithKVCache,
+    create_long_context_processor,
+)
 from open_mythos.lora import (
     LoRAConfig,
     LoRALinear,
@@ -95,4 +105,12 @@ __all__ = [
     "save_lora_adapter",
     "load_lora_adapter",
     "merge_lora_weights",
+    # Ring Attention
+    "RingAttention",
+    "SparseRingAttention",
+    "ring_attention_forward",
+    # KV Cache
+    "QuantizedKVCache",
+    "RingAttentionWithKVCache",
+    "create_long_context_processor",
 ]

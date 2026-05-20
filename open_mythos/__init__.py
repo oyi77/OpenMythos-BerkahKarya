@@ -16,6 +16,17 @@ from open_mythos.main import (
     precompute_rope_freqs,
 )
 from open_mythos.tokenizer import MythosTokenizer
+from open_mythos.lora import (
+    LoRAConfig,
+    LoRALinear,
+    apply_lora,
+    get_lora_params,
+    get_lora_param_stats,
+    print_lora_summary,
+    save_lora_adapter,
+    load_lora_adapter,
+    merge_lora_weights,
+)
 from open_mythos.quantization import (
     QuantizedLinear,
     quantize_linear_layer,
@@ -74,4 +85,14 @@ __all__ = [
     # Expert Offloading
     "ExpertOffloader",
     "create_offloaded_model",
+    # LoRA
+    "LoRAConfig",
+    "LoRALinear",
+    "apply_lora",
+    "get_lora_params",
+    "get_lora_param_stats",
+    "print_lora_summary",
+    "save_lora_adapter",
+    "load_lora_adapter",
+    "merge_lora_weights",
 ]

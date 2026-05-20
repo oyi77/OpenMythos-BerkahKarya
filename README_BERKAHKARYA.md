@@ -18,8 +18,8 @@
 ## 📦 Installation
 
 ```bash
-git clone https://github.com/oyi77/OpenMythos.git
-cd OpenMythos
+git clone https://github.com/oyi77/OpenMythos-BerkahKarya.git
+cd OpenMythos-BerkahKarya
 pip install -e .
 ```
 
@@ -69,11 +69,31 @@ python training/lora_finetune.py --variant 1b --dataset finance --qlora
 
 ## 🏗️ Development Roadmap
 
-- [x] Sprint 1: INT4/INT8 Quantization + Expert Offloading
-- [x] Sprint 2: LoRA Training Pipeline + Colab Notebook
-- [ ] Sprint 3: Ring Attention + KV Cache Compression (1M context)
-- [ ] Sprint 4: Finance Domain Fine-tuning
-- [ ] Sprint 5: vLLM/GGUF Export
+- [x] Sprint 1: INT4/INT8 Quantization + Expert Offloading (PR #74)
+- [x] Sprint 2: LoRA Training Pipeline + Colab Notebook (PR #75)
+- [x] Sprint 3: Ring Attention + KV Cache Compression (PR #76)
+- [x] Sprint 4: Finance Domain Adapters + GGUF Export (PR #77)
+- [x] Sprint 5: Finance Training Data + Colab Notebook
+
+## 🧠 Train Finance Model
+
+```bash
+# Generate training data
+python3 data/generate_finance_data.py
+
+# Train locally (QLoRA, 8GB VRAM)
+python training/lora_finetune.py --variant 1b --dataset finance --qlora
+
+# Or use Colab (FREE): notebooks/Train_Finance_Model.ipynb
+```
+
+Training data: 252 samples across 6 finance domains:
+- Trading (XAUUSD, forex, crypto, 8 pairs)
+- Business Plans (8 types)
+- Ad Copy (Meta, Google, TikTok, Shopee)
+- Cashflow Management
+- Indonesian Market (IDX, e-commerce)
+- Risk Management & Portfolio
 
 ## 📝 License
 

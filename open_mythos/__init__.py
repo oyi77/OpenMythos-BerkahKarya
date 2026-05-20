@@ -16,6 +16,23 @@ from open_mythos.main import (
     precompute_rope_freqs,
 )
 from open_mythos.tokenizer import MythosTokenizer
+from open_mythos.finance import (
+    FinanceAdapter,
+    FinanceAdapterConfig,
+    get_finance_adapter,
+    list_finance_adapters,
+    create_custom_adapter,
+    generate_trading_data,
+    generate_business_data,
+    FINANCE_ADAPTERS,
+)
+from open_mythos.gguf import (
+    GGUFConfig,
+    export_to_gguf,
+    export_to_ollama,
+    get_recommended_quantization,
+    print_quantization_guide,
+)
 from open_mythos.ring_attention import (
     RingAttention,
     SparseRingAttention,
@@ -113,4 +130,19 @@ __all__ = [
     "QuantizedKVCache",
     "RingAttentionWithKVCache",
     "create_long_context_processor",
+    # Finance
+    "FinanceAdapter",
+    "FinanceAdapterConfig",
+    "get_finance_adapter",
+    "list_finance_adapters",
+    "create_custom_adapter",
+    "generate_trading_data",
+    "generate_business_data",
+    "FINANCE_ADAPTERS",
+    # GGUF
+    "GGUFConfig",
+    "export_to_gguf",
+    "export_to_ollama",
+    "get_recommended_quantization",
+    "print_quantization_guide",
 ]
